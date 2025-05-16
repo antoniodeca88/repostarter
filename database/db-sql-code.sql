@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS public.inventory
     inv_color character varying NOT NULL,
     classification_id integer NOT NULL,
     CONSTRAINT inventory_pkey PRIMARY KEY (inv_id)
-)
+);
 
 -- Create relationship between `classification` and `inventory` tables
 ALTER TABLE IF EXISTS public.inventory
