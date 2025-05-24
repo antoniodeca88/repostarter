@@ -7,8 +7,9 @@
 <body>
   <h1><%= title %></h1>
   <p><%- message %></p>
-
+  <% if (title == 404) { %>
   <img src="https://http.cat/404" alt="Funny error image" style="max-width: 400px;">
   <p>Oops! Something went wrong... but at least it wasn't the cat's fault.</p>
+  <% } %>
 </body>
 </html>
