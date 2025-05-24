@@ -3,10 +3,12 @@ const utilities = require("../utilities/")
 
 const invCont = {}
 
+const Util = require("../utilities/")
+
 /* ***************************
  *  Build inventory by classification view
  * ************************** */
-invCont.buildByClassificationId = async function (req, res, next) {
+invCont.buildByClassificationId = Util.handleErrors(async function (req, res, next) {
   const classification_id = req.params.classificationId
   const data = await invModel.getInventoryByClassificationId(classification_id)
   const grid = await utilities.buildClassificationGrid(data)
@@ -16,13 +18,13 @@ invCont.buildByClassificationId = async function (req, res, next) {
     title: className + " vehicles",
     nav,
     grid,
-  })
-}
+  } )
+})
 
 /* ***************************
  *  Build detail view for a specific vehicle
  * ************************** */
-invCont.buildByInventoryId = async function (req, res, next) {
+invCont.buildByInventoryId = Util.handleErrors(async function (req, res, next) {
   const inv_id = parseInt(req.params.inv_id)
   const data = await invModel.getInventoryItemById(inv_id)
   const html = await utilities.buildDetailView(data)
@@ -33,6 +35,6 @@ invCont.buildByInventoryId = async function (req, res, next) {
     nav,
     html,
   })
-}
+})
 
 module.exports = invCont
