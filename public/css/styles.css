@@ -237,6 +237,56 @@ nav ul li a.active {
   color: #007bff; 
 }
 
+/* Estilos del grid*/
+#inv-display {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 0;
+  margin: 2rem 0;
+}
+
+#inv-display li {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.vehicle-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  padding: 1rem;
+}
+
+.vehicle-link:hover {
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transform: translateY(-3px);
+}
+
+.vehicle-link img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.namePrice {
+  text-align: center;
+}
+
+.namePrice h2 {
+  font-size: 1.2rem;
+  margin: 0.5rem 0;
+}
+
+.namePrice span {
+  font-weight: bold;
+  color: #2a2a2a;
+}
+
 /* Estilos del pie de página */
 footer {
   text-align: center;
@@ -248,6 +298,28 @@ footer {
   width: 100%;
   font-size: 0.8em;
 }
+
+.test-button-container {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.test-error-button {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: #dc3545; /* rojo Bootstrap */
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.test-error-button:hover {
+  background-color: #c82333;
+}
+
 
 /* Media Queries para diseño responsive */
 
