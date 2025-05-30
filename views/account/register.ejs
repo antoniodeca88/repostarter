@@ -1,29 +1,41 @@
 <h1><%= title %></h1>
 
 <!-- Flash message display -->
-<% if (locals.notice) { %>
-  <div class="flash-message"><%= notice %></div>
+<% if (typeof notice !== 'undefined' && notice.length > 0) { %>
+  <div class="flash-message"><%= notice[0] %></div>
 <% } %>
 
 <!-- Registration form -->
 <form id="registration-form" action="/account/register" method="post">
   <label for="first_name">First Name</label>
-<input type="text" id="first_name" name="account_firstname" required 
-  value="<%= typeof account_firstname !== 'undefined' ? account_firstname : '' %>">
+  <input type="text" id="first_name" name="account_firstname" required 
+    value="<%= typeof account_firstname !== 'undefined' ? account_firstname : '' %>">
 
-<label for="last_name">Last Name</label>
-<input type="text" id="last_name" name="account_lastname" required 
-  value="<%= typeof account_lastname !== 'undefined' ? account_lastname : '' %>">
+  <label for="last_name">Last Name</label>
+  <input type="text" id="last_name" name="account_lastname" required 
+    value="<%= typeof account_lastname !== 'undefined' ? account_lastname : '' %>">
 
-<label for="email">Email</label>
-<input type="email" id="email" name="account_email" required 
-  value="<%= typeof account_email !== 'undefined' ? account_email : '' %>">
+  <label for="email">Email</label>
+  <input type="email" id="email" name="account_email" required 
+    value="<%= typeof account_email !== 'undefined' ? account_email : '' %>">
 
   <label for="password">Password</label>
+
+  <!-- Password requirement notice -->
+  <div class="password-requirements">
+    Password must:
+    <ul>
+      <li>Be at least 12 characters</li>
+      <li>Include 1 uppercase letter</li>
+      <li>Include 1 number</li>
+      <li>Include 1 special character</li>
+    </ul>
+  </div>
+
   <input type="password" id="password" name="account_password" required
+    pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$"
     title="Password must be at least 12 characters and contain at least 1 number, 1 capital letter, and 1 special character.">
-  
-  <!-- Optional show/hide password -->
+
   <label><input type="checkbox" onclick="togglePassword()"> Show Password</label>
 
   <button type="submit">Register</button>

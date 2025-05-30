@@ -427,6 +427,22 @@ footer {
   border-radius: 5px;
 }
 
+.password-requirements {
+  background-color: #f0f4f8;
+  padding: 10px 15px;
+  border-left: 4px solid #007bff;
+  margin-bottom: 10px;
+  font-size: 0.9em;
+  color: #333;
+  border-radius: 4px;
+}
+
+.password-requirements ul {
+  margin: 5px 0 0;
+  padding-left: 20px;
+}
+
+
 /* Media Queries para diseño responsive */
 
 /* Para pantallas más pequeñas */
