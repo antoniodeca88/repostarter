@@ -5,6 +5,18 @@
   <div class="flash-message"><%= notice[0] %></div>
 <% } %>
 
+<!-- Validation error messages -->
+<% if (errors && errors.length > 0) { %>
+  <div class="error-message">
+  <ul class="notice">
+    <% errors.forEach(error => { %> 
+      <li><%= error.msg %></li>
+    <% }) %>
+  </ul>
+  </div>
+<% } %>
+
+
 <!-- Registration form -->
 <form id="registration-form" action="/account/register" method="post">
   <label for="first_name">First Name</label>
