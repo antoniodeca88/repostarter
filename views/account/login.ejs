@@ -1,9 +1,10 @@
 <h1><%= title %></h1>
 
 <!-- Flash message display -->
-<% if (messages.notice) { %>
-    <div class="flash-message"><%= messages.notice[0] %></div>
-  <% } %>
+<% if (typeof notice !== 'undefined' && notice.length > 0) { %>
+  <div class="flash-message"><%= notice[0] %></div>
+<% } %>
+
   
 <!-- Login form -->
 <form id="login-form" action="/account/login" method="post">
