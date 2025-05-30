@@ -20,10 +20,12 @@ router.post(
   )
 
   // Process the login attempt
-router.post(
+  router.post(
     "/login",
+    regValidate.loginRules(),
+    regValidate.checkLoginData,
     (req, res) => {
-      res.status(200).send('login process')
+      res.status(200).send("Login process (validations passed)")
     }
   )
 
