@@ -1,0 +1,15 @@
+<div class="inventory-management-container">
+    <h1>Inventory Management</h1>
+  
+    <% if (typeof messages !== "undefined" && messages.notice) { %>
+      <div class="flash-message">
+        <%= messages.notice[0] %>
+      </div>
+    <% } %>
+  
+    <ul>
+      <li><a href="/inv/add-classification">Add New Classification</a></li>
+      <li><a href="/inv/add-inventory">Add New Inventory</a></li>
+    </ul>
+  </div>
+  

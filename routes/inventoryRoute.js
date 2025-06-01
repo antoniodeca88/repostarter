@@ -1,13 +1,66 @@
-// Needed Resources 
+// Needed Resources
 const express = require("express")
-const router = new express.Router() 
+const router = new express.Router()
 const invController = require("../controllers/invController")
+const utilities = require("../utilities/")
+const invValidate = require("../utilities/inventory-validation")
 
-// Route to build inventory by classification view
-router.get("/type/:classificationId", invController.buildByClassificationId);
+/* ***************************
+ *  Inventory Routes
+ * ************************** */
 
+// View inventory by classification
+router.get(
+  "/type/:classificationId",
+  utilities.handleErrors(invController.buildByClassificationId)
+)
 
-// Route to build detail view for specific vehicle
-router.get("/detail/:inv_id", invController.buildByInventoryId)
+// View detail for specific vehicle
+router.get(
+  "/detail/:inv_id",
+  utilities.handleErrors(invController.buildByInventoryId)
+)
 
-module.exports = router;
+// Inventory management dashboard
+router.get(
+  "/",
+  utilities.handleErrors(invController.buildManagementView)
+)
+
+/* ***************************
+ *  Add Classification Routes
+ * ************************** */
+
+// Show form to add classification
+router.get(
+  "/add-classification",
+  utilities.handleErrors(invController.buildAddClassification)
+)
+
+// Handle submission to add classification
+router.post(
+  "/add-classification",
+  invValidate.classificationRules(),
+  invValidate.checkClassData,
+  utilities.handleErrors(invController.addClassification)
+)
+
+/* ***************************
+ *  Add Inventory Routes
+ * ************************** */
+
+// Show form to add inventory item
+router.get(
+  "/add-inventory",
+  utilities.handleErrors(invController.buildAddInventory)
+)
+
+// Handle submission to add inventory item
+router.post(
+  "/add-inventory",
+  invValidate.inventoryRules(),
+  invValidate.checkInventoryData,
+  utilities.handleErrors(invController.addInventory)
+)
+
+module.exports = router
