@@ -21,7 +21,7 @@
     </div>
   <% } %>
 
-  <form action="/inv/update" method="post" id="EditInventoryForm">
+  <form id="updateForm" action="/inv/update" method="post" id="EditInventoryForm">
     <label for="classificationList">Classification</label>
     <%- classificationList %>
 
@@ -52,6 +52,9 @@
     <label for="inv_color">Color</label>
     <input type="text" id="inv_color" name="inv_color" required value="<%= typeof inv_color != 'undefined' ? inv_color : '' %>">
 
-    <button type="submit">Update Vehicle</button>
+    <button type="submit" disabled>Update Vehicle</button>
+    <input type="hidden" name="inv_id"
+      <% if (locals.inv_id) { %> value="<%= locals.inv_id %>" <% } %>>
   </form>
+  <script src="/js/inv-update.js"></script>
 </div>

@@ -33,6 +33,15 @@ router.get(
   utilities.handleErrors(invController.editInventoryView)
 )
 
+// Update inventory item
+router.post(
+  "/update/",
+  invValidate.inventoryRules(),
+  invValidate.checkUpdateData,
+  invController.updateInventory
+)
+
+
 /* ***************************
  *  Add Classification Routes
  * ************************** */

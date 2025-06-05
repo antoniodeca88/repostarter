@@ -193,5 +193,38 @@ invCont.editInventoryView = async (req, res) => {
   }
 }
 
+invCont.updateInventory = async function (req, res) {
+  try {
+    console.log("Update inventory data received:", req.body)  // Log para debug
+
+    const updateResult = await invModel.updateInventory(req.body)
+
+    if (updateResult) {
+      req.flash("notice", `${req.body.inv_make} ${req.body.inv_model} was successfully updated.`)
+      return res.redirect("/inv/")
+    } else {
+      const classificationList = await utilities.buildClassificationList(req.body.classification_id)
+      const itemName = `${req.body.inv_make} ${req.body.inv_model}`
+      req.flash("notice", "Sorry, the update failed.")
+      return res.status(501).render("inventory/edit-inventory", {
+        title: "Edit " + itemName,
+        classificationList,
+        errors: null,
+        ...req.body,
+      })
+    }
+  } catch (error) {
+    console.error("Error updating inventory:", error)
+    const classificationList = await utilities.buildClassificationList(req.body.classification_id)
+    const itemName = `${req.body.inv_make} ${req.body.inv_model}`
+    req.flash("notice", "Sorry, the update failed due to a server error.")
+    return res.status(500).render("inventory/edit-inventory", {
+      title: "Edit " + itemName,
+      classificationList,
+      errors: null,
+      ...req.body,
+    })
+  }
+}
 
 module.exports = invCont
