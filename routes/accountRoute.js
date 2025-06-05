@@ -3,6 +3,9 @@ const express = require("express")
 const router = new express.Router()
 const utilities = require("../utilities/") // Utilities middleware
 const accountController = require("../controllers/accountController") 
+// Default account management view
+router.get("/", utilities.checkJWTToken, accountController.buildAccountManagement)
+
 const regValidate = require("../utilities/account-validation")
 
 // Route to build login view when "My Account" is clicked
@@ -24,9 +27,7 @@ router.post(
     "/login",
     regValidate.loginRules(),
     regValidate.checkLoginData,
-    (req, res) => {
-      res.status(200).send("Login process (validations passed)")
-    }
+    utilities.handleErrors(accountController.accountLogin)
   )
 
 // Export the router
