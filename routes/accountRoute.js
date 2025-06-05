@@ -3,10 +3,16 @@ const express = require("express")
 const router = new express.Router()
 const utilities = require("../utilities/") // Utilities middleware
 const accountController = require("../controllers/accountController") 
-// Default account management view
-router.get("/", utilities.checkJWTToken, accountController.buildAccountManagement)
-
 const regValidate = require("../utilities/account-validation")
+
+// Default account management view (protegida con JWT + login)
+router.get(
+  "/", 
+  utilities.checkJWTToken, 
+  utilities.checkLogin, 
+  utilities.handleErrors(accountController.buildAccountManagement)
+)
+
 
 // Route to build login view when "My Account" is clicked
 router.get("/login", utilities.handleErrors(accountController.buildLogin))
