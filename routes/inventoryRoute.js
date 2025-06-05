@@ -27,6 +27,12 @@ router.get(
   utilities.handleErrors(invController.buildManagementView)
 )
 
+// Route to build the edit inventory view
+router.get(
+  "/edit/:inv_id",
+  utilities.handleErrors(invController.editInventoryView)
+)
+
 /* ***************************
  *  Add Classification Routes
  * ************************** */
