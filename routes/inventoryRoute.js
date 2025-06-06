@@ -41,6 +41,12 @@ router.post(
   invController.updateInventory
 )
 
+// Delete Route
+router.get("/delete/:inv_id", invController.buildDeleteInventoryView)
+
+// Procesar Delete
+router.post("/delete", invController.deleteInventoryItem)
+
 
 /* ***************************
  *  Add Classification Routes
