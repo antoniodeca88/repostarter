@@ -142,5 +142,49 @@ Util.checkLogin = (req, res, next) => {
   }
 }
 
+Util.addAccountToLocals = function(req, res, next) {
+  res.locals.accountData = req.session.accountData
+  next()
+}
+
+// Middleware que verifica JWT y tipo de cuenta para acceso administrativo
+Util.checkAdmin = (req, res, next) => {
+  if (req.cookies.jwt) {
+    jwt.verify(
+      req.cookies.jwt,
+      process.env.ACCESS_TOKEN_SECRET,
+      function (err, accountData) {
+        if (err) {
+          req.flash("notice", "Please log in")
+          res.clearCookie("jwt")
+          return res.status(401).render("account/login", {
+            title: "Login",
+            nav: res.locals.nav,
+            notice: "Your session expired, please log in again.",
+            errors: []
+          })
+        }
+        // Verificar tipo de cuenta
+        if (accountData.account_type === "Employee" || accountData.account_type === "Admin") {
+          res.locals.accountData = accountData
+          res.locals.loggedin = 1
+          next()
+        } else {
+          req.flash("notice", "You do not have permission to access that page.")
+          return res.status(403).render("account/login", {
+            title: "Login",
+            nav: res.locals.nav,
+            notice: "You must be an employee or admin to access this page.",
+            errors: []
+          })
+        }
+      }
+    )
+  } else {
+    req.flash("notice", "Please log in.")
+    return res.redirect("/account/login")
+  }
+}
+
 
 module.exports = Util

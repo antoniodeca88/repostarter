@@ -1,4 +1,3 @@
-// Needed Resources
 const express = require("express")
 const router = new express.Router()
 const invController = require("../controllers/invController")
@@ -6,61 +5,79 @@ const utilities = require("../utilities/")
 const invValidate = require("../utilities/inventory-validation")
 
 /* ***************************
- *  Inventory Routes
- * ************************** */
+ *  Public Inventory Views
+ *  (Accessible to all visitors)
+ * ***************************/
 
-// View inventory by classification
+// View inventory by classification ID
 router.get(
   "/type/:classificationId",
   utilities.handleErrors(invController.buildByClassificationId)
 )
 
-// View detail for specific vehicle
+// View inventory item details by inventory ID
 router.get(
   "/detail/:inv_id",
   utilities.handleErrors(invController.buildByInventoryId)
 )
 
+/* ***************************
+ *  Administrative Views
+ *  (Restricted to Employee or Admin only)
+ * ***************************/
+
 // Inventory management dashboard
 router.get(
   "/",
+  utilities.checkAdmin,
   utilities.handleErrors(invController.buildManagementView)
 )
 
-// Route to build the edit inventory view
+// View to edit an existing inventory item
 router.get(
   "/edit/:inv_id",
+  utilities.checkAdmin,
   utilities.handleErrors(invController.editInventoryView)
 )
 
-// Update inventory item
+// Process update to an inventory item
 router.post(
   "/update/",
+  utilities.checkAdmin,
   invValidate.inventoryRules(),
   invValidate.checkUpdateData,
-  invController.updateInventory
+  utilities.handleErrors(invController.updateInventory)
 )
 
-// Delete Route
-router.get("/delete/:inv_id", invController.buildDeleteInventoryView)
+// View to confirm deletion of an inventory item
+router.get(
+  "/delete/:inv_id",
+  utilities.checkAdmin,
+  utilities.handleErrors(invController.buildDeleteInventoryView)
+)
 
-// Procesar Delete
-router.post("/delete", invController.deleteInventoryItem)
-
+// Process deletion of an inventory item
+router.post(
+  "/delete",
+  utilities.checkAdmin,
+  utilities.handleErrors(invController.deleteInventoryItem)
+)
 
 /* ***************************
  *  Add Classification Routes
- * ************************** */
+ * ***************************/
 
-// Show form to add classification
+// Display form to add a new classification
 router.get(
   "/add-classification",
+  utilities.checkAdmin,
   utilities.handleErrors(invController.buildAddClassification)
 )
 
-// Handle submission to add classification
+// Handle submission of new classification
 router.post(
   "/add-classification",
+  utilities.checkAdmin,
   invValidate.classificationRules(),
   invValidate.checkClassData,
   utilities.handleErrors(invController.addClassification)
@@ -68,25 +85,32 @@ router.post(
 
 /* ***************************
  *  Add Inventory Routes
- * ************************** */
+ * ***************************/
 
-// Show form to add inventory item
+// Display form to add a new inventory item
 router.get(
   "/add-inventory",
+  utilities.checkAdmin,
   utilities.handleErrors(invController.buildAddInventory)
 )
 
-// Handle submission to add inventory item
+// Handle submission of new inventory item
 router.post(
   "/add-inventory",
+  utilities.checkAdmin,
   invValidate.inventoryRules(),
   invValidate.checkInventoryData,
   utilities.handleErrors(invController.addInventory)
 )
 
-// Get inventory items by classification id (AJAX)
+/* ***************************
+ *  AJAX Inventory Retrieval
+ * ***************************/
+
+// Get inventory items by classification ID (for AJAX)
 router.get(
   "/getInventory/:classification_id",
+  utilities.checkAdmin,
   utilities.handleErrors(invController.getInventoryJSON)
 )
 

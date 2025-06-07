@@ -107,18 +107,18 @@ validate.loginRules = () => {
  * Check login data and return errors if any
  * ***************************** */
 validate.checkLoginData = async (req, res, next) => {
-    const errors = validationResult(req)
-    if (!errors.isEmpty()) {
-      const nav = await utilities.getNav()
-      return res.render("account/login", {
-        title: "Login",
-        nav,
-        errors: errors.array(),
-        account_email: req.body.account_email
-      })
-    }
-    next()
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    const nav = await utilities.getNav()
+    return res.render("account/login", {
+      title: "Login",
+      nav,
+      errors: errors.array(),
+      account_email: req.body.account_email
+    })
   }
-  
+  next()
+}
+
 
 module.exports = validate
