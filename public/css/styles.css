@@ -936,6 +936,221 @@ h2 {
   background-color: #b71c1c;
 }
 
+/*Update Account Styles*/
+.Update-Container {
+  max-width: 480px;
+  margin: 40px auto;
+  padding: 30px 25px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.Update-Container h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-weight: 700;
+  font-size: 1.8rem;
+  color: #2c3e50;
+}
+
+.Update-Container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.Update-Container label {
+  margin-bottom: 6px;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #34495e;
+}
+
+.Update-Container input[type="text"],
+.Update-Container input[type="email"] {
+  padding: 10px 12px;
+  margin-bottom: 18px;
+  border: 1.8px solid #bdc3c7;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.Update-Container input[type="text"]:focus,
+.Update-Container input[type="email"]:focus {
+  outline: none;
+  border-color: #2980b9;
+  box-shadow: 0 0 5px rgba(41, 128, 185, 0.4);
+}
+
+.Update-Container button[type="submit"] {
+  padding: 12px;
+  background-color: #2980b9;
+  color: white;
+  font-weight: 700;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.Update-Container button[type="submit"]:hover {
+  background-color: #1f6391;
+}
+
+.error {
+  color: #e74c3c;
+  font-size: 0.9rem;
+  margin-top: -14px;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+/*Mangement styles*/
+
+.Management-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 30px 25px;
+  background-color: #fefefe;
+  border-radius: 10px;
+  box-shadow: 0 5px 18px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #2c3e50;
+  text-align: center;
+}
+
+.Management-container h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 18px;
+  color: #34495e;
+}
+
+.Management-container h2 {
+  margin-top: 20px;
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: #2980b9;
+}
+
+.Management-container h3 {
+  margin-top: 35px;
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #34495e;
+}
+
+.Management-container p {
+  font-size: 1rem;
+  margin: 12px 0;
+  color: #555;
+}
+
+.Management-container a {
+  color: #2980b9;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.Management-container a:hover {
+  color: #1f6391;
+  text-decoration: underline;
+}
+
+.notice {
+  background-color: #dff0d8;
+  color: #3c763d;
+  border: 1px solid #d6e9c6;
+  padding: 12px 18px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.errors {
+  background-color: #f2dede;
+  color: #a94442;
+  border: 1px solid #ebccd1;
+  padding: 12px 18px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.errors p {
+  margin: 6px 0;
+}
+
+/* Update password styles*/
+.ChangePassword-container {
+  max-width: 500px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  font-family: Arial, sans-serif;
+}
+
+.ChangePassword-container h2 {
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+  color: #111827;
+  text-align: center;
+}
+
+.ChangePassword-container p {
+  font-size: 0.95rem;
+  color: #374151;
+  margin-bottom: 1rem;
+}
+
+.ChangePassword-container label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #1f2937;
+}
+
+.ChangePassword-container input[type="password"] {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.ChangePassword-container .error {
+  color: #dc2626;
+  font-size: 0.9rem;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+
+.ChangePassword-container button[type="submit"] {
+  background-color: #2563eb;
+  color: white;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.ChangePassword-container button[type="submit"]:hover {
+  background-color: #1d4ed8;
+}
+
+
 /* Media Queries para diseño responsive */
 
 /* Para pantallas más pequeñas */

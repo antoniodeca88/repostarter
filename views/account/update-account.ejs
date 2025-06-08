@@ -1,0 +1,105 @@
+
+
+<div class="Update-Container">
+    <h1>Update Account</h1>
+    <form action="/account/update" method="POST">
+        <input type="hidden" name="account_id" value="<%= accountData.account_id %>">
+      
+        <label for="account_firstname">Nombre:</label>
+        <input
+          type="text"
+          id="account_firstname"
+          name="account_firstname"
+          value="<%= accountData.account_firstname ? accountData.account_firstname : '' %>"
+          required
+        >
+        <% if (errors) { 
+            const error = errors.find(e => e.param === 'account_firstname');
+            if(error) { %>
+          <p class="error"><%= error.msg %></p>
+        <% }} %>
+    
+      <label for="account_lastname">Apellido:</label>
+      <input
+        type="text"
+        id="account_lastname"
+        name="account_lastname"
+        value="<%= accountData.account_lastname ? accountData.account_lastname : '' %>"
+        required
+      >
+      <% if (errors) { 
+          const error = errors.find(e => e.param === 'account_lastname');
+          if(error) { %>
+        <p class="error"><%= error.msg %></p>
+      <% }} %>
+    
+      <label for="account_email">Email:</label>
+      <input
+        type="email"
+        id="account_email"
+        name="account_email"
+        value="<%= accountData.account_email ? accountData.account_email : '' %>"
+        required
+      >
+      <% if (errors) { 
+          const error = errors.find(e => e.param === 'account_email');
+          if(error) { %>
+        <p class="error"><%= error.msg %></p>
+      <% }} %>
+    
+      <button type="submit">Update Account</button>
+
+    </form>
+
+    
+<div class="ChangePassword-container">
+    <h2>Change Password</h2>
+  <p>Enter your new password below. Password must be at least 12 characters and include 1 uppercase letter, 1 number, and 1 special character.</p>
+
+  <form id="changePasswordForm" action="/account/change-password" method="POST" novalidate>
+    <input type="hidden" name="account_id" value="<%= accountData.account_id %>">
+
+    <label for="account_password">New Password:</label>
+    <input
+      type="password"
+      id="account_password"
+      name="account_password"
+      required
+    >
+    <label for="account_password_confirm">Confirm Password:</label>
+<input
+  type="password"
+  id="account_password_confirm"
+  name="account_password_confirm"
+  required
+>
+    <p id="passwordError" class="error" style="display: none;"></p>
+
+    <button type="submit">Change Password</button>
+  </form>
+</div>
+
+<script>
+  const form = document.getElementById("changePasswordForm")
+  const passwordInput = document.getElementById("account_password")
+  const passwordError = document.getElementById("passwordError")
+
+  form.addEventListener("submit", function (e) {
+    const password = passwordInput.value
+    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{12,}$/
+
+    if (!strongPasswordRegex.test(password)) {
+      e.preventDefault()
+      passwordError.textContent = "Password must be at least 12 characters and include 1 uppercase letter, 1 number, and 1 special character."
+      passwordError.style.display = "block"
+      passwordInput.style.borderColor = "red"
+    } else {
+      passwordError.style.display = "none"
+      passwordInput.style.borderColor = ""
+    }
+  })
+</script>
+
+    
+    
+    

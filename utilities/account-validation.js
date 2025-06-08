@@ -1,124 +1,170 @@
-// utilities/account-validation.js
+// account-validation.js
+const { body, validationResult } = require("express-validator");
+const utilities = require("./"); // para getNav()
 
-const utilities = require(".")
-const { body, validationResult } = require("express-validator")
+const regValidate = {};
 
-const validate = {}
+// Validación para registro de cuenta
+regValidate.registrationRules = () => {
+  return [
+    body("account_firstname")
+      .trim()
+      .escape()
+      .notEmpty().withMessage("First name is required.")
+      .isLength({ min: 2 }).withMessage("First name must be at least 2 characters."),
+    body("account_lastname")
+      .trim()
+      .escape()
+      .notEmpty().withMessage("Last name is required.")
+      .isLength({ min: 2 }).withMessage("Last name must be at least 2 characters."),
+    body("account_email")
+      .trim()
+      .escape()
+      .notEmpty().withMessage("Email is required.")
+      .isEmail().withMessage("Please enter a valid email address.")
+      .normalizeEmail(),
+    body("account_password")
+      .trim()
+      .notEmpty().withMessage("Password is required.")
+      .isStrongPassword({
+        minLength: 12,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+      }).withMessage("Password must be at least 12 characters and include 1 uppercase letter, 1 number, and 1 special character."),
+    body("account_password2")
+      .trim()
+      .notEmpty().withMessage("Confirm password is required.")
+      .custom((value, { req }) => {
+        if (value !== req.body.account_password) {
+          throw new Error("Passwords do not match");
+        }
+        return true;
+      }),
+  ];
+};
 
+// Validación para login
+regValidate.loginRules = () => {
+  return [
+    body("account_email")
+      .trim()
+      .escape()
+      .notEmpty().withMessage("Email is required.")
+      .isEmail().withMessage("Please enter a valid email address.")
+      .normalizeEmail(),
+    body("account_password")
+      .trim()
+      .notEmpty().withMessage("Password is required."),
+  ];
+};
 
-const accountModel = require("../models/account-model")
+// Validación para actualizar cuenta
+regValidate.updateAccountRules = () => {
+  return [
+    body("account_firstname")
+      .trim()
+      .escape()
+      .notEmpty().withMessage("First name is required.")
+      .isLength({ min: 2 }).withMessage("First name must be at least 2 characters."),
+    body("account_lastname")
+      .trim()
+      .escape()
+      .notEmpty().withMessage("Last name is required.")
+      .isLength({ min: 2 }).withMessage("Last name must be at least 2 characters."),
+    body("account_email")
+      .trim()
+      .escape()
+      .notEmpty().withMessage("Email is required.")
+      .isEmail().withMessage("Please enter a valid email address.")
+      .normalizeEmail(),
+  ];
+};
 
-/*  **********************************
- *  Registration Data Validation Rules
- * ********************************* */
-validate.registrationRules = () => {
-    return [
-      // First name
-      body("account_firstname")
-        .trim()
-        .escape()
-        .notEmpty().withMessage("First name is required.")
-        .bail()
-        .isLength({ min: 2 }).withMessage("First name must be at least 2 characters."),
-  
-      // Last name
-      body("account_lastname")
-        .trim()
-        .escape()
-        .notEmpty().withMessage("Last name is required.")
-        .bail()
-        .isLength({ min: 2 }).withMessage("Last name must be at least 2 characters."),
-  
-      //  Email
-      body("account_email")
-        .trim()
-        .escape()
-        .notEmpty().withMessage("Email is required.")
-        .bail()
-        .isEmail().withMessage("Please enter a valid email address.")
-        .normalizeEmail()
-        .custom(async (account_email) => {
-            const emailExists = await accountModel.checkExistingEmail(account_email)
-            if (emailExists){
-              throw new Error("Email exists. Please log in or use different email")
-            }
-          }),
-  
-      //  Password
-      body("account_password")
-        .trim()
-        .notEmpty().withMessage("Password is required.")
-        .bail()
-        .isStrongPassword({
-          minLength: 12,
-          minLowercase: 1,
-          minUppercase: 1,
-          minNumbers: 1,
-          minSymbols: 1
-        }).withMessage(
-          "Password must be at least 12 characters and include 1 uppercase letter, 1 number, and 1 special character."
-        )
-    ]
-  }
-  
+// Validación para cambio de contraseña
+regValidate.passwordRules = () => {
+  return [
+    body("account_password")
+      .trim()
+      .notEmpty().withMessage("Password is required.")
+      .isStrongPassword({
+        minLength: 12,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+      }).withMessage("Password must be at least 12 characters and include 1 uppercase letter, 1 number, and 1 special character."),
+    body("account_password2")
+      .trim()
+      .notEmpty().withMessage("Confirm password is required.")
+      .custom((value, { req }) => {
+        if (value !== req.body.account_password) {
+          throw new Error("Passwords do not match");
+        }
+        return true;
+      }),
+  ];
+};
 
-/* ******************************
- * Check data and return errors
- * ***************************** */
-validate.checkRegData = async (req, res, next) => {
-  const errors = validationResult(req)
-  console.log("Errores de validación:", errors.array())
-
+// Middleware para checar errores en registro
+regValidate.checkRegData = async (req, res, next) => {
+  const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    let nav = await utilities.getNav()
-    res.render("account/register", {
+    let nav = await utilities.getNav();
+    return res.status(400).render("account/register", {
       title: "Register",
       nav,
       errors: errors.array(),
-      account_firstname: req.body.account_firstname,
-      account_lastname: req.body.account_lastname,
-      account_email: req.body.account_email
-    })
-    return
+      accountData: req.body,
+    });
   }
-  next()
-}
+  next();
+};
 
-/* **********************************
- *  Login Data Validation Rules
- * ********************************* */
-validate.loginRules = () => {
-    return [
-      body("account_email")
-        .trim()
-        .escape()
-        .notEmpty().withMessage("Email is required.")
-        .bail()
-        .isEmail().withMessage("Please enter a valid email address.")
-        .normalizeEmail(),
-  
-      body("account_password")
-        .trim()
-        .notEmpty().withMessage("Password is required.")
-    ]
-  }
-  
-  /* ******************************
- * Check login data and return errors if any
- * ***************************** */
-validate.checkLoginData = async (req, res, next) => {
-  const errors = validationResult(req)
+// Middleware para checar errores en login
+regValidate.checkLoginData = async (req, res, next) => {
+  const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    const nav = await utilities.getNav()
-    return res.render("account/login", {
+    let nav = await utilities.getNav();
+    return res.status(400).render("account/login", {
       title: "Login",
       nav,
       errors: errors.array(),
-      account_email: req.body.account_email
-    })
+      account_email: req.body.account_email,
+    });
   }
-  next()
-}
+  next();
+};
 
+// Middleware para checar errores en actualización de cuenta
+regValidate.checkUpdateAccountData = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav();
+    return res.status(400).render("account/update-account", {
+      title: "Update Account",
+      nav,
+      errors: errors.array(),
+      accountData: req.body,
+    });
+  }
+  next();
+};
 
-module.exports = validate
+// Middleware para checar errores en cambio de contraseña
+regValidate.checkPasswordChange = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav();
+    return res.status(400).render("account/account-management", {
+      title: "Account Management",
+      nav,
+      errors: errors.array(),
+      accountData: req.body,
+    });
+  }
+  next();
+};
+
+module.exports = regValidate;

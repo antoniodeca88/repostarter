@@ -1,7 +1,8 @@
 <h1>Account Management</h1>
-
-<% if (flash && flash.notice) { %>
-  <div class="notice"><%= flash.notice %></div>
+<% if (Array.isArray(messages) && messages.length > 0) { %>
+  <% messages.forEach(function(message) { %>
+    <div class="notice"><%= message %></div>
+  <% }) %>
 <% } %>
 
 <% if (errors) { %>

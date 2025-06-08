@@ -141,9 +141,86 @@ function logout(req, res) {
   })
 }
 
+/* Mostrar vista para actualizar datos */
+async function buildUpdateAccount(req, res, next) {
+  const account_id = parseInt(req.params.account_id)
+  try {
+    const accountData = await accountModel.getAccountById(account_id)
+    if (!accountData) {
+      const error = new Error("Account not found.")
+      error.status = 404
+      throw error
+    }
+
+    const nav = await utilities.getNav()
+    res.render("account/update-account", {
+      title: "Update Account",
+      nav,
+      accountData,
+      errors: null
+    })
+  } catch (error) {
+    next(error)  
+  }
+}
+/* Actualizar datos */
+async function updateAccount(req, res) {
+  const { account_firstname, account_lastname, account_email, account_id } = req.body
+  const updateResult = await accountModel.updateAccount(
+    account_id,
+    account_firstname,
+    account_lastname,
+    account_email
+  )
+
+  if (updateResult) {
+    req.flash("notice", "Account updated successfully.")
+  } else {
+    req.flash("notice", "Account update failed.")
+  }
+
+  const nav = await utilities.getNav()
+  const accountData = await accountModel.getAccountById(account_id)
+
+  res.render("account/account-management", {
+    title: "Account Management",
+    nav,
+    accountData,
+    errors: null,
+    flash: req.flash()
+  })
+}
+
+/* Cambiar contraseña */
+async function changePassword(req, res) {
+  const { account_password, account_id } = req.body
+  const hashedPassword = await bcrypt.hash(account_password, 10)
+
+  const updateResult = await accountModel.updatePassword(account_id, hashedPassword)
+
+  if (updateResult) {
+    req.flash("notice", "Password changed successfully.")
+  } else {
+    req.flash("notice", "Password change failed.")
+  }
+
+  const nav = await utilities.getNav()
+  const accountData = await accountModel.getAccountById(account_id)
+
+  res.render("account/account-management", {
+    title: "Account Management",
+    nav,
+    accountData,
+    errors: null,
+    messages: req.flash("notice") || []
+  })
+}
 
   module.exports = { buildLogin, 
     buildRegister, 
     registerAccount, 
     accountLogin, buildAccountManagement,
-    logout }
+    logout,
+    buildUpdateAccount,
+    updateAccount,
+    changePassword }

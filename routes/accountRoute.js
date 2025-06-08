@@ -36,10 +36,32 @@ router.post(
     utilities.handleErrors(accountController.accountLogin)
   )
 
-
   //  Logout
 router.get("/logout", accountController.logout)
 
+// Mostrar el formulario de actualización de cuenta
+router.get(
+  "/update/:account_id",
+  utilities.checkJWTToken,
+  utilities.checkLogin,
+  utilities.handleErrors(accountController.buildUpdateAccount)
+)
+
+// Procesar el formulario de actualización de datos
+router.post(
+  "/update",
+  regValidate.updateAccountRules(),
+  regValidate.checkUpdateAccountData,
+  utilities.handleErrors(accountController.updateAccount)
+)
+
+// Procesar cambio de contraseña
+router.post(
+  "/change-password",
+  regValidate.passwordRules(),
+  regValidate.checkPasswordChange,
+  utilities.handleErrors(accountController.changePassword)
+)
 
 // Export the router
 module.exports = router
