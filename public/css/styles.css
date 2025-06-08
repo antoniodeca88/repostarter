@@ -1151,6 +1151,82 @@ h2 {
 }
 
 
+.account-management-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #f0f8ff; /* Azul muy claro */
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.account-management-container h1 {
+  color: #007bff; /* Azul vibrante */
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+.account-management-container h2 {
+  color: #0056b3;
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+.account-management-container h3 {
+  color: #004085;
+  margin-top: 2rem;
+  font-weight: 600;
+}
+
+.notice {
+  background-color: #d4edda; /* Verde claro */
+  color: #155724;
+  padding: 0.8rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  border: 1px solid #c3e6cb;
+  font-weight: 500;
+}
+
+.errors {
+  background-color: #f8d7da; /* Rojo claro */
+  color: #721c24;
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  border: 1px solid #f5c6cb;
+}
+
+.errors p {
+  margin: 0.3rem 0;
+  font-weight: 500;
+}
+
+.account-management-container p {
+  font-size: 1rem;
+  margin: 0.8rem 0;
+}
+
+.account-management-container a {
+  display: inline-block;
+  background-color: #007bff;
+  color: white;
+  padding: 0.5rem 1.2rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.account-management-container a:hover {
+  background-color: #0056b3;
+}
+
+
+
 /* Media Queries para diseño responsive */
 
 /* Para pantallas más pequeñas */

@@ -157,7 +157,8 @@ async function buildUpdateAccount(req, res, next) {
       title: "Update Account",
       nav,
       accountData,
-      errors: null
+      errors: null,
+      flash: req.flash()
     })
   } catch (error) {
     next(error)  
@@ -165,31 +166,104 @@ async function buildUpdateAccount(req, res, next) {
 }
 /* Actualizar datos */
 async function updateAccount(req, res) {
-  const { account_firstname, account_lastname, account_email, account_id } = req.body
-  const updateResult = await accountModel.updateAccount(
-    account_id,
-    account_firstname,
-    account_lastname,
-    account_email
-  )
+  const { account_id, account_firstname, account_lastname, account_email, account_password } = req.body;
+  const nav = await utilities.getNav();
 
-  if (updateResult) {
-    req.flash("notice", "Account updated successfully.")
-  } else {
-    req.flash("notice", "Account update failed.")
+  try {
+    // Get current account data
+    const currentAccount = await accountModel.getAccountById(account_id);
+    if (!currentAccount) {
+      req.flash("notice", "Account not found.");
+      return res.status(404).render("account/account-management", {
+        title: "Account Management",
+        nav,
+        accountData: {},
+        errors: null,
+        flash: req.flash(),
+      });
+    }
+
+    // Check if email has changed and already exists
+    if (account_email !== currentAccount.account_email) {
+      const existingEmail = await accountModel.checkExistingEmail(account_email);
+      if (existingEmail) {
+        req.flash("notice", "That email already exists. Please use a different one.");
+        return res.status(400).render("account/update-account", {
+          title: "Update Account",
+          nav,
+          accountData: req.body,
+          errors: null
+        });
+      }
+    }
+
+    let updateResult;
+
+    if (account_password && account_password.trim() !== "") {
+      // Validate password length
+      if (account_password.length < 12 || !/\d/.test(account_password) || !/[A-Z]/.test(account_password) || !/[a-z]/.test(account_password) || !/[!@#$%^&*]/.test(account_password)) {
+        req.flash("notice", "Password must be at least 12 characters and include a number, uppercase, lowercase, and special character.");
+        return res.status(400).render("account/update-account", {
+          title: "Update Account",
+          nav,
+          accountData: req.body,
+          errors: null
+        });
+      }
+
+      const hashedPassword = await bcrypt.hash(account_password, 10);
+      updateResult = await accountModel.updateAccountWithPassword(
+        account_id,
+        account_firstname,
+        account_lastname,
+        account_email,
+        hashedPassword
+      );
+    } else {
+      updateResult = await accountModel.updateAccount(
+        account_id,
+        account_firstname,
+        account_lastname,
+        account_email
+      );
+    }
+
+    if (updateResult) {
+      // Refresh session data if email was changed
+      const updatedAccount = await accountModel.getAccountById(account_id);
+      req.session.accountData = {
+        account_id: updatedAccount.account_id,
+        account_firstname: updatedAccount.account_firstname,
+        account_lastname: updatedAccount.account_lastname,
+        account_email: updatedAccount.account_email,
+        account_type: updatedAccount.account_type
+      };
+      req.flash("notice", "Account updated successfully.");
+      return res.redirect("/account");
+    } else {
+      req.flash("notice", "Account update failed.");
+      return res.status(500).render("account/account-management", {
+        title: "Account Management",
+        nav,
+        accountData: currentAccount,
+        errors: null,
+        flash: req.flash()
+      });
+    }
+
+  } catch (error) {
+    console.error("Update Error:", error);
+    req.flash("notice", "An unexpected error occurred.");
+    res.status(500).render("account/account-management", {
+      title: "Account Management",
+      nav,
+      accountData: req.body,
+      errors: null,
+      flash: req.flash()
+    });
   }
-
-  const nav = await utilities.getNav()
-  const accountData = await accountModel.getAccountById(account_id)
-
-  res.render("account/account-management", {
-    title: "Account Management",
-    nav,
-    accountData,
-    errors: null,
-    flash: req.flash()
-  })
 }
+
 
 /* Cambiar contraseña */
 async function changePassword(req, res) {

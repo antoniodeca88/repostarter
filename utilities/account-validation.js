@@ -1,8 +1,9 @@
 // account-validation.js
 const { body, validationResult } = require("express-validator");
 const utilities = require("./"); // para getNav()
-
 const regValidate = {};
+const accountModel = require("../models/account-model"); 
+
 
 // Validación para registro de cuenta
 regValidate.registrationRules = () => {
@@ -33,15 +34,7 @@ regValidate.registrationRules = () => {
         minNumbers: 1,
         minSymbols: 1,
       }).withMessage("Password must be at least 12 characters and include 1 uppercase letter, 1 number, and 1 special character."),
-    body("account_password2")
-      .trim()
-      .notEmpty().withMessage("Confirm password is required.")
-      .custom((value, { req }) => {
-        if (value !== req.body.account_password) {
-          throw new Error("Passwords do not match");
-        }
-        return true;
-      }),
+    
   ];
 };
 
@@ -95,15 +88,7 @@ regValidate.passwordRules = () => {
         minNumbers: 1,
         minSymbols: 1,
       }).withMessage("Password must be at least 12 characters and include 1 uppercase letter, 1 number, and 1 special character."),
-    body("account_password2")
-      .trim()
-      .notEmpty().withMessage("Confirm password is required.")
-      .custom((value, { req }) => {
-        if (value !== req.body.account_password) {
-          throw new Error("Passwords do not match");
-        }
-        return true;
-      }),
+    
   ];
 };
 
@@ -140,6 +125,34 @@ regValidate.checkLoginData = async (req, res, next) => {
 // Middleware para checar errores en actualización de cuenta
 regValidate.checkUpdateAccountData = async (req, res, next) => {
   const errors = validationResult(req);
+  const { account_id, account_email } = req.body;
+  let nav = await utilities.getNav();
+
+  // Validación de correo duplicado si no hay errores de formato
+  if (errors.isEmpty()) {
+    try {
+      const existingAccount = await accountModel.getAccountByEmail(account_email);
+
+      // Si existe y no es el mismo usuario que está actualizando
+      if (existingAccount && existingAccount.account_id != account_id) {
+        errors.errors.push({
+          param: "account_email",
+          msg: "The email is already registered. Please use a different one.",
+        });
+      }
+    } catch (err) {
+      console.error("Error checking duplicate email:", err);
+      return res.status(500).render("account/update-account", {
+        title: "Update Account",
+        nav,
+        errors: [{ msg: "Server error during email validation." }],
+        accountData: req.body,
+        flash: req.flash(),
+
+      });
+    }
+  }
+
   if (!errors.isEmpty()) {
     let nav = await utilities.getNav();
     return res.status(400).render("account/update-account", {
@@ -147,8 +160,10 @@ regValidate.checkUpdateAccountData = async (req, res, next) => {
       nav,
       errors: errors.array(),
       accountData: req.body,
+      flash: req.flash(),
     });
   }
+
   next();
 };
 

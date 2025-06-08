@@ -2,6 +2,12 @@
 
 <div class="Update-Container">
     <h1>Update Account</h1>
+    <% if (flash && flash.notice && flash.notice.length > 0) { %>
+        <div class="alert alert-success">
+          <%= flash.notice[0] %>
+        </div>
+      <% } %>
+      
     <form action="/account/update" method="POST">
         <input type="hidden" name="account_id" value="<%= accountData.account_id %>">
       
@@ -66,13 +72,7 @@
       name="account_password"
       required
     >
-    <label for="account_password_confirm">Confirm Password:</label>
-<input
-  type="password"
-  id="account_password_confirm"
-  name="account_password_confirm"
-  required
->
+    
     <p id="passwordError" class="error" style="display: none;"></p>
 
     <button type="submit">Change Password</button>

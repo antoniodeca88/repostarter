@@ -63,5 +63,6 @@ router.post(
   utilities.handleErrors(accountController.changePassword)
 )
 
+
 // Export the router
 module.exports = router
