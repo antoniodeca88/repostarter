@@ -9,7 +9,7 @@ require("dotenv").config()
  ************************** */
 Util.getNav = async function (req, res, next) {
   let data = await invModel.getClassifications()
-  console.log(data)
+  //console.log(data)
   let list = "<ul>"
   list += '<li><a href="/" title="Home page">Home</a></li>'
   data.rows.forEach((row) => {
@@ -135,6 +135,8 @@ Util.checkJWTToken = (req, res, next) => {
  * ************************************ */
 Util.checkLogin = (req, res, next) => {
   if (res.locals.loggedin) {
+     res.locals.loggedin = true;
+    res.locals.accountData = req.session.accountData;
     next()
   } else {
     req.flash("notice", "Please log in.")
@@ -144,8 +146,12 @@ Util.checkLogin = (req, res, next) => {
 
 Util.addAccountToLocals = function(req, res, next) {
   res.locals.accountData = req.session.accountData
+  res.locals.loggedin = req.session.loggedin || false
+  console.log("res.locals.loggedin:", res.locals.loggedin)
   next()
 }
+
+
 
 // Middleware que verifica JWT y tipo de cuenta para acceso administrativo
 Util.checkAdmin = (req, res, next) => {

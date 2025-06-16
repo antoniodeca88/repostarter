@@ -2,6 +2,8 @@ const invModel = require("../models/inventory-model")
 const utilities = require("../utilities/")
 
 const invCont = {}
+const commentModel = require("../models/comment-model") // asegúrate de tener este archivo
+
 
 /* ***************************
  *  Build inventory by classification view
@@ -28,10 +30,16 @@ invCont.buildByInventoryId = utilities.handleErrors(async function (req, res, ne
   const html = await utilities.buildDetailView(data)
   const nav = await utilities.getNav()
 
+  // Obtener comentarios
+  const comments = await commentModel.getCommentsByVehicleId(inv_id)
+
   res.render("inventory/detail", {
     title: `${data.inv_make} ${data.inv_model}`,
     nav,
     html,
+    comments,
+    item: data,
+    accountData: req.session.accountData,
   })
 })
 

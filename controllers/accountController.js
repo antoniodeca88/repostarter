@@ -99,6 +99,11 @@ async function accountLogin(req, res) {
         account_email: accountData.account_email,
         account_type: accountData.account_type
       }
+      req.session.loggedin = true;
+
+      console.log("Sesión después de login:", req.session);
+
+
       const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 * 1000 })
       if (process.env.NODE_ENV === 'development') {
         res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 })

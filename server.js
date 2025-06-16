@@ -18,6 +18,7 @@ const pool = require('./database/')
 const accountRoute = require("./routes/accountRoute")
 const bodyParser = require("body-parser")
 const cookieParser = require("cookie-parser")
+const commentRoute = require("./routes/commentRoute")
 
 /* ***********************
  * Middleware
@@ -72,6 +73,10 @@ app.use("/error", errorRoute)
 // Account route
 app.use("/account", accountRoute)
 
+//comments route 
+app.use("/comments", commentRoute)
+
+
 // File Not Found Route - must be last route in list
 app.use((req, res, next) => {
   next({
@@ -105,5 +110,5 @@ const host = process.env.HOST || 'localhost'
  * Log statement to confirm server operation
  *************************/
 app.listen(port, () => {
-  console.log(`app listening on ${host}:${port}`)
+ // console.log(`app listening on ${host}:${port}`)
 })
